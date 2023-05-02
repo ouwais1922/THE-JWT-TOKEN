@@ -1,8 +1,9 @@
 const express = require('express');
+const  dotenv =  require("dotenv")
 const mongoose = require('mongoose');
 
 const app = express();
-
+dotenv.config();
 // middleware
 app.use(express.static('public'));
 
@@ -14,12 +15,35 @@ app.set('view engine', 'ejs');
 // mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
 //   .then((result) => app.listen(3000))
 //   .catch((err) => console.log(err));
+dotenv.config();
+
+const connect = async()=>{
+
+    try{
+
+      await mongoose.connect("mongodb+srv://ouwais:ouwais@cluster0.03ljqwa.mongodb.net/?retryWrites=true&w=majority");
+      console.log("Connect to mongodb!!");  
+
+    }catch(err){
+      console.log(err);
+    }
+}
+
+// in case someting is going wrong in MONGODB
+mongoose.connection.on("disconnected", () => {
+  console.log("mongoDB diconnected");
+});
+// in case somthing is going wrong in MONGODB and we get to rcover the problem
+mongoose.connection.on("connected", () => {
+  console.log("mongoDB is connected");
+});
+
 
 // routes
 app.get('/', (req, res) => res.render('home'));
 app.get('/smoothies', (req, res) => res.render('smoothies'));
 
 app.listen(3000,()=>{
-  // connect();
+  connect();
   console.log("The server is connected to port: 5000 ....");
 })
