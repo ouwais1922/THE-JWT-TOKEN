@@ -7,6 +7,7 @@ const app = express();
 dotenv.config();
 // middleware
 app.use(express.static('public'));
+app.use(express.json());
 
 // view engine
 app.set('view engine', 'ejs');
@@ -22,7 +23,7 @@ const connect = async()=>{
 
     try{
 
-      await mongoose.connect("mongodb+srv://ouwais:ouwais@cluster0.03ljqwa.mongodb.net/?retryWrites=true&w=majority");
+      await mongoose.connect('mongodb+srv://ouwais:ouwais@cluster0.gnbe2if.mongodb.net/?retryWrites=true&w=majority',{ useUnifiedTopology: true,useNewUrlParser: true  });
       console.log("Connect to mongodb!!");  
 
     }catch(err){
