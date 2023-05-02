@@ -1,6 +1,7 @@
 const express = require('express');
 const  dotenv =  require("dotenv")
 const mongoose = require('mongoose');
+const authRoute = require('./routes/authRoutes.js');
 
 const app = express();
 dotenv.config();
@@ -42,6 +43,7 @@ mongoose.connection.on("connected", () => {
 // routes
 app.get('/', (req, res) => res.render('home'));
 app.get('/smoothies', (req, res) => res.render('smoothies'));
+app.use(authRoute);
 
 app.listen(3000,()=>{
   connect();
