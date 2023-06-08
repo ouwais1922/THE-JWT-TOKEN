@@ -1,5 +1,18 @@
 const User = require('../Model/User.js')
 
+const hadnleError = (err)=>{
+    //console.log(err.message,err.code);
+    
+    let errors = {email : '', password: ''}
+    if(err.message.includes('User validation failed')){
+        // console.log(Object.values(err.errors));
+        Object.values(err.errors).forEach(({properties})=>{
+            errors[properties.path] = properties.message
+        })
+    }
+    return errors;
+}
+
 const singUpGetController = async(req,res)=>{
     res.render('signup')
 }
@@ -13,8 +26,8 @@ const singUpPostController = async(req,res)=>{
         const user = await User.create({email,password});
         res.status(201).json(user.email);
     }catch(err){
-        console.log(err);
-        res.status(404).send('Error, user is not created');
+       const errors =  hadnleError(err);
+        res.status(404).send({errors});
     }
 }
 const loginPostController = async(req,res)=>{
