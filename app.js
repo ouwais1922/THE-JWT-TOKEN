@@ -2,12 +2,14 @@ const express = require('express');
 const  dotenv =  require("dotenv")
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes.js');
+const cookieParser = require('cookie-parser')
 
 const app = express();
 dotenv.config();
 // middleware
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cookieParser());
 
 // view engine
 app.set('view engine', 'ejs');
@@ -44,7 +46,18 @@ mongoose.connection.on("connected", () => {
 // routes
 app.get('/', (req, res) => res.render('home'));
 app.get('/smoothies', (req, res) => res.render('smoothies'));
+app.get('/cookie', (req, res) => {
+  res.cookie('newUser',true);
+  res.cookie('newStudent',false);
+  res.send('You get a new Cookie');
+});
 app.use(authRoute);
+
+
+
+// app.get('/read-cookies',(req,res)={
+
+// })
 
 app.listen(3000,()=>{
   connect();
