@@ -53,11 +53,13 @@ app.get('/cookie', (req, res) => {
 });
 app.use(authRoute);
 
+app.get('/set',(req,res)=>{
+  res.cookie('newUser',true,{maxAge:10000})
+  res.cookie('newStudent',false)
+  res.cookie('newEelement',0)
+  res.send("cookies")
+})
 
-
-// app.get('/read-cookies',(req,res)={
-
-// })
 
 app.listen(3000,()=>{
   connect();
