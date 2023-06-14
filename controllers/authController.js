@@ -79,16 +79,17 @@ const loginPostController = async (req, res) => {
     }
 }
 
-const midFunction = ()=>{
-
-    console.log("hello world");
-
+const logoutController = async(req,res)=>{
+    res.cookie('jwt','',{maxAge:1});
+    res.redirect('/');
 }
+
+
 
 module.exports = {
     singUpGetController,
     singUpPostController,
     loginGetController,
     loginPostController,
-    midFunction
+    logoutController
 }
