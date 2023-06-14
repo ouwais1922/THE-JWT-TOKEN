@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const { singUpGetController, singUpPostController, loginGetController, loginPostController } = require('../controllers/authController.js');
+const { singUpGetController, midFunction,singUpPostController, loginGetController, loginPostController } = require('../controllers/authController.js');
 const authRoute = Router();
 
 authRoute.get('/signup',singUpGetController);

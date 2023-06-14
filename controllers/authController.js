@@ -44,7 +44,7 @@ const singUpPostController = async (req, res) => {
     try {
         const user = await User.create({ email, password });
         const token = createToken(user._id);
-        res.cookie('JWT', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.status(201).json({ user: user._id });
     } catch (err) {
         const errors = hadnleError(err);
@@ -70,7 +70,7 @@ const loginPostController = async (req, res) => {
     try {
         const user = await User.login(email, password);
         const token = createToken(user._id);
-        res.cookie('JWT', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.status(200).json({ user: user._id });
     } catch (err) {
         const errors = hadnleError(err);
@@ -79,9 +79,16 @@ const loginPostController = async (req, res) => {
     }
 }
 
+const midFunction = ()=>{
+
+    console.log("hello world");
+
+}
+
 module.exports = {
     singUpGetController,
     singUpPostController,
     loginGetController,
-    loginPostController
+    loginPostController,
+    midFunction
 }
