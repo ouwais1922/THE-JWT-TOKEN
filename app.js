@@ -1,7 +1,12 @@
 const express = require('express');
-const  dotenv =  require("dotenv")
+const dotenv = require("dotenv");
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const winston = require('winston');
+const { mongodbConnect } = require('./Model/database');
+const authRouter = require('./routes/authRoutes.js');
+const {requireAuth} = require('./middleware/requireAuth.js')
+
 
 const app = express();
 dotenv.config();
@@ -12,25 +17,7 @@ app.use(cookieParser());
 
 // view engine
 app.set('view engine', 'ejs');
-
-// database connection
-// const dbURI = 'mongodb+srv://shaun:test1234@cluster0.del96.mongodb.net/node-auth';
-// mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
-//   .then((result) => app.listen(3000))
-//   .catch((err) => console.log(err));
 dotenv.config();
-
-const connect = async()=>{
-
-    try{
-
-      await mongoose.connect('mongodb+srv://ouwais:ouwais@cluster0.gnbe2if.mongodb.net/?retryWrites=true&w=majority',{ useUnifiedTopology: true,useNewUrlParser: true  });
-      console.log("Connect to mongodb!!");  
-
-    }catch(err){
-      console.log(err);
-    }
-}
 
 // in case someting is going wrong in MONGODB
 mongoose.connection.on("disconnected", () => {
@@ -44,11 +31,25 @@ mongoose.connection.on("connected", () => {
 
 // routes
 app.get('/', (req, res) => res.render('home'));
-app.get('/smoothies',(req, res) => res.render('smoothies'));
+app.get('/smoothies',requireAuth,(req, res) => res.render('smoothies'));
+app.use(authRouter)
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ level, message, timestamp }) => {
+      return `[${timestamp}] ${level}: ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.File({ filename: './logs/logs.log' })
+  ]
+});
 
 
 
-app.listen(3000,()=>{
-  connect();
+app.listen(process.env.PORT, () => {
+  mongodbConnect();
   console.log("The server is connected to port: 5000 ....");
 })
